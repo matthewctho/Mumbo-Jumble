@@ -1,40 +1,21 @@
 {
   "project_info": {
-    "project_number": "595184953958",
-    "project_id": "touch-glass-8bea6",
-    "storage_bucket": "touch-glass-8bea6.firebasestorage.app"
+    "project_number": "672099773388",
+    "project_id": "touch-grass-mumble-jumbo",
+    "storage_bucket": "touch-grass-mumble-jumbo.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:595184953958:android:e8b792c3ae87c5eb38dba7",
+        "mobilesdk_app_id": "1:672099773388:android:52ed55b4c5ad04dd438b69",
         "android_client_info": {
-          "package_name": "com.example.touchgras"
+          "package_name": "com.mumble_jumble.touchgrass"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBu_LZdflK7LDr4u-FKfKTU1mYaSencS0o"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:595184953958:android:e5e076b7fba3e74438dba7",
-        "android_client_info": {
-          "package_name": "com.example.touchgrass"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBu_LZdflK7LDr4u-FKfKTU1mYaSencS0o"
+          "current_key": "AIzaSyAivHRdtub590aQ8kKj0uwtTwJD2KD7WqE"
         }
       ],
       "services": {
