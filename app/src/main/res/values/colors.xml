@@ -5,4 +5,7 @@
     <color name="color_151_71_255">#FF9747FF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#000000</color>
+    <color name="input_stroke">#C8C2B5</color>
+    <color name="input_hint">#777467</color>
+    <color name="input_icon">#657052</color>
 </resources>

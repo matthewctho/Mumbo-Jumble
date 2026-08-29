@@ -3,6 +3,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -143,19 +144,19 @@
 
     <TextView
         android:id="@+id/modeToggleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="263dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="18dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
         android:text="Don't have an account? Create one"
         android:textColor="#6B7355"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/submitButton"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="18dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/submitButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
