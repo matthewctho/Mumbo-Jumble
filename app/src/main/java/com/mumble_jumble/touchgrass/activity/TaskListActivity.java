@@ -1,13 +1,13 @@
-package com.example.touchgrass.activity;
+package com.mumble_jumble.touchgrass.activity;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.touchgrass.R;
-import com.example.touchgrass.adapters.TaskAdapter;
-import com.example.touchgrass.models.Task;
+import com.mumble_jumble.touchgrass.R;
+import com.mumble_jumble.touchgrass.adapters.TaskAdapter;
+import com.mumble_jumble.touchgrass.models.Task;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.touchgrass.adapters;
+package com.mumble_jumble.touchgrass.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.touchgrass.R;
-import com.example.touchgrass.models.Task;
+import com.mumble_jumble.touchgrass.R;
+import com.mumble_jumble.touchgrass.models.Task;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {

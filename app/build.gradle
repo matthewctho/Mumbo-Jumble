@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace 'com.example.touchgrass'
+    namespace 'com.mumble_jumble.touchgrass'
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId "com.example.touchgrass"
+        applicationId "com.mumble_jumble.touchgrass"
         minSdk 30
         targetSdk 37
         versionCode 1

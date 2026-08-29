@@ -1,4 +1,4 @@
-package com.example.touchgrass.models;
+package com.mumble_jumble.touchgrass.models;
 
 public class Task {
     public String name;

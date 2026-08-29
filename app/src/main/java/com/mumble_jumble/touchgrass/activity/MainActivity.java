@@ -1,4 +1,4 @@
-package com.example.touchgrass.activity;
+package com.mumble_jumble.touchgrass.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.touchgrass.AuthScreen;
-import com.example.touchgrass.R;
-import com.example.touchgrass.data.AuthService;
+import com.mumble_jumble.touchgrass.AuthScreen;
+import com.mumble_jumble.touchgrass.R;
+import com.mumble_jumble.touchgrass.data.AuthService;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
