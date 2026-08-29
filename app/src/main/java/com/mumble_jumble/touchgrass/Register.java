@@ -13,7 +13,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.mumble_jumble.touchgrass.activity.MainActivity;
 import com.mumble_jumble.touchgrass.data.AuthService;
 import com.mumble_jumble.touchgrass.data.FirestoreService;
 import com.google.firebase.auth.FirebaseUser;
@@ -104,7 +103,7 @@ public class Register extends AppCompatActivity {
     }
 
     private void goToHome() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, Homepage.class));
         finish();
     }
 }

@@ -10,6 +10,11 @@ public class AuthService {
         void onFailure(Exception e);
     }
 
+    public interface ResetPasswordCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
+
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     public void signUp(String email, String password, AuthCallback callback) {
@@ -26,6 +31,12 @@ public class AuthService {
 
     public void signOut() {
         firebaseAuth.signOut();
+    }
+
+    public void sendPasswordResetEmail(String email, ResetPasswordCallback callback) {
+        firebaseAuth.sendPasswordResetEmail(email)
+                .addOnSuccessListener(unused -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
     }
 
     public FirebaseUser getCurrentUser() {

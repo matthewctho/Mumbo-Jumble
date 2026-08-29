@@ -9,4 +9,6 @@
     <string name="auth_switch_to_sign_in">Already have an account? Sign In</string>
     <string name="auth_error_missing_fields">Please fill in all fields.</string>
     <string name="auth_error_profile_failed">Signed in, but profile setup failed: %1$s</string>
+    <string name="auth_error_missing_email">Enter your email above first, then tap Forgot password.</string>
+    <string name="auth_reset_email_sent">Password reset email sent. Check your inbox.</string>
 </resources>

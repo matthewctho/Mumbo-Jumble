@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TouchGrass">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".AuthScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,10 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AuthScreen"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Register"
             android:exported="true"
@@ -35,6 +31,9 @@
             android:name="com.mumble_jumble.touchgrass.RedeemPoints"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.PackListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
