@@ -56,6 +56,9 @@ public class Homepage extends AppCompatActivity {
         View signOutButton =
                 findViewById(R.id.signOutButton);
 
+        View redeemPointsButton =
+                findViewById(R.id.redeemPointsButton);
+
 
         // =========================================================
         // PAGE ENTRANCE ANIMATIONS
@@ -91,6 +94,14 @@ public class Homepage extends AppCompatActivity {
             startActivity(new Intent(this, AuthScreen.class));
             finish();
         });
+
+
+        // =========================================================
+        // REDEEM POINTS
+        // =========================================================
+
+        redeemPointsButton.setOnClickListener(v ->
+                startActivity(new Intent(this, RedeemPoints.class)));
 
 
         // =========================================================

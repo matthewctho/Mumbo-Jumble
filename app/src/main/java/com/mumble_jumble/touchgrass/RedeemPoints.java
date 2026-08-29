@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.view.animation.DecelerateInterpolator;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -29,8 +33,16 @@ public class RedeemPoints extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        EdgeToEdge.enable(this);
+
         // Connect this Activity to your XML layout
         setContentView(R.layout.activity_redeem_points);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.pointsPage), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
 
         // ==============================
