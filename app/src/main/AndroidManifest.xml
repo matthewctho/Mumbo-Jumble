@@ -28,12 +28,16 @@
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.mumble_jumble.touchgrass.RedeemPoints"
+            android:name=".RedeemPoints"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.PackListActivity"
             android:exported="false" />
+        <activity
+            android:name=".ChallengeProgress"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

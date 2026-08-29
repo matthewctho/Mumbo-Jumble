@@ -33,15 +33,6 @@
     <!-- BACKGROUND OVERLAY -->
     <!-- ===================================================== -->
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#CCF4EFE6"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 
     <!-- ===================================================== -->
     <!-- HEADER -->
@@ -86,8 +77,8 @@
                     android:id="@+id/profileImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="10dp"
                     android:contentDescription="Profile picture"
+                    android:padding="10dp"
                     android:src="@android:drawable/ic_menu_myplaces"
                     app:tint="#783911" />
 
@@ -112,8 +103,8 @@
                     android:id="@+id/usernameText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
                     android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="Username"
                     android:textColor="#FFF9F0"
                     android:textSize="17sp"
@@ -124,8 +115,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:maxLines="1"
                     android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="Ready for a challenge?"
                     android:textColor="#E9D8C8"
                     android:textSize="11sp" />
@@ -167,10 +158,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
+                        android:letterSpacing="0.12"
                         android:text="YOUR SCORE"
                         android:textColor="#DABDA7"
-                        android:textSize="8sp"
-                        android:letterSpacing="0.12" />
+                        android:textSize="8sp" />
 
                 </LinearLayout>
 
@@ -433,6 +424,11 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#CCF4EFE6" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -544,10 +540,18 @@
                                 android:id="@+id/hikingIcon"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:padding="18dp"
                                 android:contentDescription="Hiking icon"
+                                android:padding="18dp"
                                 android:src="@android:drawable/ic_menu_compass"
                                 app:tint="#F4EFE6" />
+
+                            <ImageView
+                                android:id="@+id/ivHiking"
+                                android:layout_width="match_parent"
+                                android:layout_height="83dp"
+                                android:contentDescription="Hiking activity icon"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/hiking_icon" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -627,6 +631,14 @@
                                 android:src="@android:drawable/ic_menu_rotate"
                                 app:tint="#F4EFE6" />
 
+                            <ImageView
+                                android:id="@+id/ivBasketball"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="Basketball activity icon"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/basketball_icon" />
+
                         </androidx.cardview.widget.CardView>
 
                         <TextView
@@ -698,12 +710,20 @@
 
                             <ImageView
                                 android:id="@+id/photoWalksIcon"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:padding="18dp"
+                                android:layout_width="55dp"
+                                android:layout_height="58dp"
                                 android:contentDescription="Photo walks icon"
+                                android:padding="18dp"
                                 android:src="@android:drawable/ic_menu_camera"
                                 app:tint="#F4EFE6" />
+
+                            <ImageView
+                                android:id="@+id/ivPhotoWalk"
+                                android:layout_width="match_parent"
+                                android:layout_height="66dp"
+                                android:contentDescription="Photo walk activity icon"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/photo_walk_icon" />
 
                         </androidx.cardview.widget.CardView>
 
