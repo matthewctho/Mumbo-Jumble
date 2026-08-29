@@ -1,7 +1,6 @@
 package com.mumble_jumble.touchgrass.activity;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,17 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mumble_jumble.touchgrass.R;
 import com.mumble_jumble.touchgrass.adapters.PackAdapter;
-import com.mumble_jumble.touchgrass.data.GeminiVerificationService;
 import com.mumble_jumble.touchgrass.models.ChallengePack;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PackListActivity extends AppCompatActivity {
-
     private static final String TAG = "PackListActivity";
     private PackAdapter adapter;
     private List<ChallengePack> packs = new ArrayList<>();
@@ -31,11 +26,15 @@ public class PackListActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerPacks);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new PackAdapter(packs);
+        adapter = new PackAdapter(packs, pack -> {
+            Intent intent = new Intent(PackListActivity.this, TaskListActivity.class);
+            intent.putExtra("packId", pack.challengeId);
+            intent.putExtra("packName", pack.name);
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
 
         loadPacksFromFirestore();
-
     }
 
     private void loadPacksFromFirestore() {
@@ -47,11 +46,13 @@ public class PackListActivity extends AppCompatActivity {
                     packs.clear();
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         ChallengePack pack = doc.toObject(ChallengePack.class);
-                        pack.challengeId = doc.getId();
+                        pack.challengeId = doc.getId(); // store the doc's ID on the object
                         packs.add(pack);
                     }
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged(); // tells RecyclerView data changed, re-render
                 })
-                .addOnFailureListener(e -> Log.e(TAG, "Error loading packs", e));
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading packs", e);
+                });
     }
 }

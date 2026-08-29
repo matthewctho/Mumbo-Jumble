@@ -12,10 +12,16 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
-    private List<Task> taskList;
+    public interface OnTaskClickListener {
+        void onTaskClick(Task task);
+    }
 
-    public TaskAdapter(List<Task> taskList) {
+    private List<Task> taskList;
+    private final OnTaskClickListener listener;
+
+    public TaskAdapter(List<Task> taskList, OnTaskClickListener listener) {
         this.taskList = taskList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -31,6 +37,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Task task = taskList.get(position);
         holder.txtTaskName.setText(task.name);
         holder.txtTaskPoints.setText("+" + task.pointValue + " pt");
+        holder.itemView.setOnClickListener(v -> listener.onTaskClick(task));
     }
 
     @Override

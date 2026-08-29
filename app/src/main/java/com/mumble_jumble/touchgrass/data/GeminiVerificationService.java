@@ -17,14 +17,6 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Calls the Gemini API to check whether a submitted photo actually matches
- * what a task asked for (e.g. "summit or lookout photo").
- *
- * This runs a network call, so it must NOT be called on the main thread —
- * this class handles that internally (runs on a background thread, then
- * delivers the result back on the main thread via the callback).
- */
 public class GeminiVerificationService {
 
     private static final String TAG = "GeminiVerification";
@@ -36,26 +28,15 @@ public class GeminiVerificationService {
     private final Handler mainThread = new Handler(Looper.getMainLooper());
 
     public interface VerificationCallback {
-        /** approved = true/false from the AI. reason is a short human-readable explanation. */
         void onResult(boolean approved, String reason);
-        /** Called on network failure, bad response, timeout, etc. Treat as "pending review", not rejection. */
         void onError(Exception e);
     }
 
-    /**
-     * @param imageBytes   raw JPEG bytes of the photo (from Storage upload or straight from camera)
-     * @param taskName     e.g. "Summit or lookout photo"
-     * @param taskType     "scenery_photo" (kept for future task-type-specific prompts)
-     */
-    public void verifyPhoto(byte[] imageBytes, String taskName, String taskType, VerificationCallback callback) {
-        if (BuildConfig.GEMINI_API_KEY == null || BuildConfig.GEMINI_API_KEY.isEmpty()) {
-            callback.onError(new Exception("Gemini API key is missing. Please add GEMINI_API_KEY to your local.properties file."));
-            return;
-        }
+    public void verifyPhoto(byte[] imageBytes, String taskName, String taskDescription, String taskType, VerificationCallback callback) {
         executor.execute(() -> {
             try {
                 String base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-                JSONObject requestBody = buildRequestBody(base64Image, taskName);
+                JSONObject requestBody = buildRequestBody(base64Image, taskName, taskDescription);
 
                 HttpURLConnection connection = (HttpURLConnection) new URL(ENDPOINT).openConnection();
                 connection.setRequestMethod("POST");
@@ -91,9 +72,15 @@ public class GeminiVerificationService {
         });
     }
 
-    private JSONObject buildRequestBody(String base64Image, String taskName) throws Exception {
+    private JSONObject buildRequestBody(String base64Image, String taskName, String taskDescription) throws Exception {
+        boolean hasDescription = taskDescription != null && !taskDescription.trim().isEmpty();
+
         String prompt = "You are verifying a photo submitted for a scavenger-hunt style app task called: \""
-                + taskName + "\". Look at the image and decide if it genuinely matches what the task asks for. "
+                + taskName + "\". "
+                + (hasDescription
+                ? "Specifically, the photo must show: " + taskDescription + ". "
+                : "")
+                + "Look at the image and decide if it genuinely matches what the task asks for. "
                 + "Respond with ONLY a JSON object, no other text, in this exact format: "
                 + "{\"approved\": true or false, \"reason\": \"one short sentence\"}";
 
@@ -131,7 +118,6 @@ public class GeminiVerificationService {
                 .getJSONObject(0)
                 .getString("text");
 
-        // Gemini sometimes wraps JSON in ```json ... ``` — strip that if present
         String cleaned = rawText.trim()
                 .replaceAll("^```json", "")
                 .replaceAll("^```", "")

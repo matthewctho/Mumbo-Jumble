@@ -1,23 +1,29 @@
 package com.mumble_jumble.touchgrass.adapters;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.mumble_jumble.touchgrass.R;
-import com.mumble_jumble.touchgrass.activity.TaskListActivity;
 import com.mumble_jumble.touchgrass.models.ChallengePack;
+
 import java.util.List;
 
 public class PackAdapter extends RecyclerView.Adapter<PackAdapter.PackViewHolder> {
 
-    private List<ChallengePack> packList;
+    public interface OnPackClickListener {
+        void onPackClick(ChallengePack pack);
+    }
 
-    public PackAdapter(List<ChallengePack> packList) {
+    private List<ChallengePack> packList;
+    private final OnPackClickListener listener;
+
+    public PackAdapter(List<ChallengePack> packList, OnPackClickListener listener) {
         this.packList = packList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,14 +39,7 @@ public class PackAdapter extends RecyclerView.Adapter<PackAdapter.PackViewHolder
         ChallengePack pack = packList.get(position);
         holder.txtPackName.setText(pack.name);
         holder.txtPackDescription.setText(pack.description);
-
-        // Whole row is tappable — opens TaskListActivity for this specific pack
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), TaskListActivity.class);
-            intent.putExtra("packId", pack.challengeId);
-            intent.putExtra("packName", pack.name); // handy for a screen title, optional
-            v.getContext().startActivity(intent);
-        });
+        holder.itemView.setOnClickListener(v -> listener.onPackClick(pack));
     }
 
     @Override

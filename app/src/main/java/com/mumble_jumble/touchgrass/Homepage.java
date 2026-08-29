@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -11,15 +12,23 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.mumble_jumble.touchgrass.activity.TaskListActivity;
 import com.mumble_jumble.touchgrass.data.AuthService;
 import com.mumble_jumble.touchgrass.data.FirestoreService;
+import com.mumble_jumble.touchgrass.models.ChallengePack;
 import com.mumble_jumble.touchgrass.models.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Homepage extends AppCompatActivity {
 
@@ -94,6 +103,16 @@ public class Homepage extends AppCompatActivity {
     private String currentChallengeTitle = "";
     private String currentChallengeDescription = "";
 
+    // The real Firestore pack matching whichever challenge popup is currently
+    // open, resolved by keyword match against pack name/activityType (see
+    // resolvePackId()). Null if no matching pack was found — e.g. "Try
+    // Something New" has no backend pack behind it yet.
+    private String currentChallengePackId = null;
+
+    // Loaded once at startup so we can match hardcoded challenge titles
+    // (Hiking, Basketball, Photo Walk) to their real Firestore doc IDs.
+    private final List<ChallengePack> allChallengePacks = new ArrayList<>();
+
 
     // =========================================================
     // ON CREATE
@@ -109,6 +128,8 @@ public class Homepage extends AppCompatActivity {
         // =====================================================
 
         setContentView(R.layout.activity_homepage);
+
+        loadChallengePacksForMapping();
 
 
         // =====================================================
@@ -812,8 +833,44 @@ public class Homepage extends AppCompatActivity {
 
                 currentChallengeTitle,
 
-                currentChallengeDescription
+                currentChallengeDescription,
+
+                currentChallengePackId
         );
+
+
+        // =====================================================
+        // START REAL PROGRESS TRACKING IN FIRESTORE
+        // =====================================================
+
+        FirebaseUser currentUser = authService.getCurrentUser();
+
+        if (currentChallengePackId != null && currentUser != null) {
+
+            firestoreService.startChallenge(
+                    currentUser.getUid(),
+                    currentChallengePackId,
+                    new FirestoreService.WriteCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d("Homepage", "Challenge progress started for pack " + currentChallengePackId);
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            Log.e("Homepage", "Failed to start challenge progress", e);
+                        }
+                    }
+            );
+
+        } else {
+
+            // No matching Firestore pack found for this card (e.g. "Try
+            // Something New" has no backend pack yet) — enrolled locally
+            // only, tapping into it later won't open the real task screen.
+            Log.w("Homepage", "No matching Firestore pack for '" + currentChallengeTitle
+                    + "' — enrolled locally only, no backend progress tracking");
+        }
 
 
         hideChallenge();
@@ -830,7 +887,9 @@ public class Homepage extends AppCompatActivity {
 
             String title,
 
-            String description
+            String description,
+
+            String packId
     ) {
 
         // =====================================================
@@ -1221,6 +1280,30 @@ public class Homepage extends AppCompatActivity {
 
 
         // =====================================================
+        // TAP TO OPEN REAL TASK SCREEN
+        // =====================================================
+
+        card.setOnClickListener(v -> {
+
+            if (packId != null) {
+
+                Intent intent = new Intent(Homepage.this, TaskListActivity.class);
+                intent.putExtra("packId", packId);
+                intent.putExtra("packName", title);
+                startActivity(intent);
+
+            } else {
+
+                Toast.makeText(
+                        Homepage.this,
+                        "This challenge isn't linked to a real pack yet",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+
+
+        // =====================================================
         // ADD CARD
         // =====================================================
 
@@ -1527,6 +1610,9 @@ public class Homepage extends AppCompatActivity {
         currentChallengeDescription =
                 description;
 
+        currentChallengePackId =
+                resolvePackId(title);
+
 
         // =====================================================
         // SET POPUP TEXT
@@ -1737,6 +1823,86 @@ public class Homepage extends AppCompatActivity {
                 })
 
                 .start();
+    }
+
+
+    // =========================================================
+    // LOAD REAL CHALLENGE PACKS (for mapping hardcoded UI cards
+    // to their actual Firestore doc IDs)
+    // =========================================================
+
+    private void loadChallengePacksForMapping() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("challengePacks")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+
+                    allChallengePacks.clear();
+
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        ChallengePack pack = doc.toObject(ChallengePack.class);
+                        pack.challengeId = doc.getId();
+                        allChallengePacks.add(pack);
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Log.e("Homepage", "Failed to load challenge packs for mapping", e)
+                );
+    }
+
+
+    // =========================================================
+    // RESOLVE PACK ID
+    //
+    // Matches a hardcoded challenge title (Hiking, Basketball,
+    // Photo Walk) to the real Firestore pack behind it, by
+    // checking the pack's name/activityType for a keyword.
+    // Returns null if no match is found (e.g. "Try Something
+    // New" has no backend pack yet).
+    // =========================================================
+
+    private String resolvePackId(String title) {
+
+        String lowerTitle = title.toLowerCase();
+
+        String keyword = null;
+
+        if (lowerTitle.contains("hik")) {
+            keyword = "hik";
+        } else if (lowerTitle.contains("basketball")) {
+            keyword = "basketball";
+        } else if (lowerTitle.contains("photo")) {
+            keyword = "photo";
+        }
+
+        if (keyword == null) {
+            return null;
+        }
+
+        for (ChallengePack pack : allChallengePacks) {
+
+            String name = pack.name != null ? pack.name.toLowerCase() : "";
+            String type = pack.activityType != null ? pack.activityType.toLowerCase() : "";
+
+            if (name.contains(keyword) || type.contains(keyword)) {
+                return pack.challengeId;
+            }
+        }
+
+        // Fallback: "Photo Walk" was originally seeded as "Culture Crawl"
+        // in some versions of the seed data — check that too.
+        if ("photo".equals(keyword)) {
+            for (ChallengePack pack : allChallengePacks) {
+                String name = pack.name != null ? pack.name.toLowerCase() : "";
+                if (name.contains("culture")) {
+                    return pack.challengeId;
+                }
+            }
+        }
+
+        return null;
     }
 
 
