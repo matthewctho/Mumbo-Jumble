@@ -10,7 +10,6 @@
     android:background="#F4EFE6"
     android:fitsSystemWindows="true">
 
-
     <!-- ===================================================== -->
     <!-- BACKGROUND -->
     <!-- ===================================================== -->
@@ -27,11 +26,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <!-- ===================================================== -->
-    <!-- BACKGROUND OVERLAY -->
-    <!-- ===================================================== -->
 
     <View
         android:layout_width="0dp"
@@ -61,15 +55,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="16dp"
             android:paddingEnd="16dp">
-
-
-            <!-- PROFILE -->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/profileContainer"
@@ -93,8 +83,6 @@
 
             </androidx.cardview.widget.CardView>
 
-
-            <!-- USER INFO -->
 
             <LinearLayout
                 android:id="@+id/userInfo"
@@ -133,8 +121,6 @@
             </LinearLayout>
 
 
-            <!-- POINTS -->
-
             <LinearLayout
                 android:id="@+id/pointsInfo"
                 android:layout_width="wrap_content"
@@ -144,7 +130,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
 
                 <LinearLayout
                     android:id="@+id/pointsTextContainer"
@@ -174,8 +159,6 @@
 
                 </LinearLayout>
 
-
-                <!-- REDEEM -->
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/redeemPointsButton"
@@ -300,6 +283,7 @@
         <!-- ================================================= -->
 
         <LinearLayout
+            android:id="@+id/ongoingHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -333,9 +317,10 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/ongoingStatusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="IN PROGRESS"
+                android:text="0 ACTIVE"
                 android:textColor="#596447"
                 android:textSize="9sp"
                 android:textStyle="bold"
@@ -345,97 +330,95 @@
 
 
         <!-- ================================================= -->
-        <!-- ONGOING CARD -->
+        <!-- ONGOING CHALLENGES -->
         <!-- ================================================= -->
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ongoingChallengeBox"
+        <HorizontalScrollView
+            android:id="@+id/ongoingChallengesScrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="12dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="#244316"
-            app:cardCornerRadius="22dp"
-            app:cardElevation="7dp">
+            android:fillViewport="true"
+            android:scrollbars="none"
+            android:overScrollMode="never">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/ongoingChallengesContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:padding="20dp">
+                android:orientation="horizontal">
 
-                <View
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:alpha="0.08"
-                    android:background="@drawable/circle_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/emptyOngoingCard"
+                    android:layout_width="330dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="12dp"
+                    app:cardBackgroundColor="#244316"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="7dp">
 
-                <TextView
-                    android:id="@+id/ongoingLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="NO CHALLENGE WAITING?"
-                    android:textColor="#BFC9B7"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.12"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="20dp">
 
-                <TextView
-                    android:id="@+id/hikingChallengeName5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Make one.\nYour next adventure is waiting."
-                    android:textColor="#F8F5EE"
-                    android:textSize="21sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ongoingLabel" />
+                        <TextView
+                            android:id="@+id/emptyOngoingLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NOTHING YET"
+                            android:textColor="#BFC9B7"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.12"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Pick something you've never noticed before and give yourself a reason to explore it."
-                    android:textColor="#D8DFD3"
-                    android:textSize="12sp"
-                    android:lineSpacingExtra="2dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/hikingChallengeName5" />
+                        <TextView
+                            android:id="@+id/emptyOngoingTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Your next adventure is waiting."
+                            android:textColor="#F8F5EE"
+                            android:textSize="21sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/emptyOngoingLabel" />
 
-                <TextView
-                    android:id="@+id/ongoingProgressText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Keep going  →"
-                    android:textColor="#E6E7DF"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                        <TextView
+                            android:id="@+id/emptyOngoingDescription"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Choose a challenge below and enrol to add it to your journey."
+                            android:textColor="#D8DFD3"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="2dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/emptyOngoingTitle" />
 
-                <TextView
-                    android:id="@+id/ongoingArrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="→"
-                    android:textColor="#F8F5EE"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CHOOSE A CHALLENGE  →"
+                            android:textColor="#E6E7DF"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.08"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
 
         <!-- ================================================= -->
@@ -490,7 +473,7 @@
 
 
         <!-- ================================================= -->
-        <!-- CHALLENGE CARDS -->
+        <!-- NEW CHALLENGES -->
         <!-- ================================================= -->
 
         <HorizontalScrollView
@@ -641,7 +624,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/hikingChallengeName3"
+                            android:id="@+id/basketballChallengeDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -667,7 +650,7 @@
 
 
                 <!-- ================================================= -->
-                <!-- PHOTO WALKS -->
+                <!-- PHOTO WALK -->
                 <!-- ================================================= -->
 
                 <androidx.cardview.widget.CardView
@@ -719,7 +702,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/hikingChallengeName4"
+                            android:id="@+id/photoWalksChallengeDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -764,7 +747,6 @@
         android:focusable="true"
         android:elevation="30dp">
 
-
         <androidx.cardview.widget.CardView
             android:id="@+id/taskListPopup"
             android:layout_width="match_parent"
@@ -776,20 +758,17 @@
             app:cardCornerRadius="28dp"
             app:cardElevation="12dp">
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="24dp">
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
-
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -817,7 +796,6 @@
 
                     </LinearLayout>
 
-
                     <androidx.cardview.widget.CardView
                         android:id="@+id/closeTaskListButton"
                         android:layout_width="38dp"
@@ -842,7 +820,6 @@
 
                 </LinearLayout>
 
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -853,7 +830,7 @@
                     android:lineSpacingExtra="2dp" />
 
 
-                <!-- TASK 1 -->
+                <!-- TASK HIKING -->
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/taskHiking"
@@ -923,7 +900,7 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <!-- TASK 2 -->
+                <!-- TASK BASKETBALL -->
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/taskBasketball"
@@ -993,7 +970,7 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <!-- TASK 3 -->
+                <!-- TASK PHOTO WALK -->
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/taskPhotoWalk"
@@ -1063,7 +1040,7 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <!-- TASK 4 -->
+                <!-- TASK EXPLORE -->
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/taskExplore"
@@ -1133,7 +1110,7 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <!-- CLOSE -->
+                <!-- CLOSE TASK LIST -->
 
                 <TextView
                     android:id="@+id/closeTaskListText"
@@ -1168,11 +1145,6 @@
         android:focusable="true"
         android:elevation="50dp">
 
-
-        <!-- ================================================= -->
-        <!-- POPUP -->
-        <!-- ================================================= -->
-
         <androidx.cardview.widget.CardView
             android:id="@+id/challengePopup"
             android:layout_width="match_parent"
@@ -1184,7 +1156,6 @@
             app:cardCornerRadius="30dp"
             app:cardElevation="16dp">
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1192,9 +1163,9 @@
                 android:padding="24dp">
 
 
-                <!-- ============================================= -->
-                <!-- HEADER -->
-                <!-- ============================================= -->
+                <!-- ================================================= -->
+                <!-- POPUP HEADER -->
+                <!-- ================================================= -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1202,13 +1173,11 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
-
 
                         <TextView
                             android:id="@+id/challengePopupCategory"
@@ -1219,7 +1188,6 @@
                             android:textSize="10sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.15" />
-
 
                         <TextView
                             android:id="@+id/challengePopupTitle"
@@ -1234,10 +1202,12 @@
                     </LinearLayout>
 
 
-                    <!-- ENROL CIRCLE -->
+                    <!-- ================================================= -->
+                    <!-- CLOSE CHALLENGE BUTTON -->
+                    <!-- ================================================= -->
 
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/enrolChallengeButton"
+                        android:id="@+id/closeChallengeButton"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:clickable="true"
@@ -1261,9 +1231,9 @@
                 </LinearLayout>
 
 
-                <!-- ============================================= -->
+                <!-- ================================================= -->
                 <!-- DESCRIPTION -->
-                <!-- ============================================= -->
+                <!-- ================================================= -->
 
                 <TextView
                     android:id="@+id/challengePopupDescription"
@@ -1276,9 +1246,9 @@
                     android:lineSpacingExtra="2dp" />
 
 
-                <!-- ============================================= -->
+                <!-- ================================================= -->
                 <!-- TASK 1 -->
-                <!-- ============================================= -->
+                <!-- ================================================= -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -1296,7 +1266,6 @@
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp">
 
-
                         <TextView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -1307,14 +1276,12 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
-
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
 
                             <TextView
                                 android:id="@+id/challengeTask1Title"
@@ -1324,7 +1291,6 @@
                                 android:textColor="#FFF9F0"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
-
 
                             <TextView
                                 android:id="@+id/challengeTask1Description"
@@ -1342,9 +1308,9 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <!-- ============================================= -->
+                <!-- ================================================= -->
                 <!-- TASK 2 -->
-                <!-- ============================================= -->
+                <!-- ================================================= -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -1362,7 +1328,6 @@
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp">
 
-
                         <TextView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -1373,14 +1338,12 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
-
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
 
                             <TextView
                                 android:id="@+id/challengeTask2Title"
@@ -1390,7 +1353,6 @@
                                 android:textColor="#FFF9F0"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
-
 
                             <TextView
                                 android:id="@+id/challengeTask2Description"
@@ -1408,9 +1370,9 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <!-- ============================================= -->
+                <!-- ================================================= -->
                 <!-- TASK 3 -->
-                <!-- ============================================= -->
+                <!-- ================================================= -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -1428,7 +1390,6 @@
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp">
 
-
                         <TextView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -1439,14 +1400,12 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
-
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
 
                             <TextView
                                 android:id="@+id/challengeTask3Title"
@@ -1456,7 +1415,6 @@
                                 android:textColor="#FFF9F0"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
-
 
                             <TextView
                                 android:id="@+id/challengeTask3Description"
@@ -1474,9 +1432,9 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <!-- ============================================= -->
+                <!-- ================================================= -->
                 <!-- TASK 4 -->
-                <!-- ============================================= -->
+                <!-- ================================================= -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -1494,7 +1452,6 @@
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp">
 
-
                         <TextView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -1505,14 +1462,12 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
-
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
 
                             <TextView
                                 android:id="@+id/challengeTask4Title"
@@ -1522,7 +1477,6 @@
                                 android:textColor="#FFF9F0"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
-
 
                             <TextView
                                 android:id="@+id/challengeTask4Description"
@@ -1540,12 +1494,12 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <!-- ============================================= -->
-                <!-- DISMISS -->
-                <!-- ============================================= -->
+                <!-- ================================================= -->
+                <!-- ENROL CHALLENGE -->
+                <!-- ================================================= -->
 
                 <TextView
-                    android:id="@+id/enrolChallengeText"
+                    android:id="@+id/enrolChallengeButton"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:layout_marginTop="12dp"
