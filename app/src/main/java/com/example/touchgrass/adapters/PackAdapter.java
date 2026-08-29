@@ -1,4 +1,4 @@
-package com.example.touchgrass;
+package com.example.touchgrass.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,6 +6,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.touchgrass.R;
+import com.example.touchgrass.models.ChallengePack;
+
 import java.util.List;
 
 public class PackAdapter extends RecyclerView.Adapter<PackAdapter.PackViewHolder> {

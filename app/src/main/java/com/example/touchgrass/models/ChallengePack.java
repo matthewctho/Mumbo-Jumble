@@ -1,4 +1,4 @@
-package com.example.touchgrass;
+package com.example.touchgrass.models;
 // This is the challenges description and activities
 public class ChallengePack {
     public String name;

@@ -1,9 +1,14 @@
-package com.example.touchgrass;
+package com.example.touchgrass.activity;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.touchgrass.R;
+import com.example.touchgrass.adapters.PackAdapter;
+import com.example.touchgrass.models.ChallengePack;
+
 import java.util.ArrayList;
 import java.util.List;
 
