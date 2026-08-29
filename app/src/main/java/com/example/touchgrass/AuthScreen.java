@@ -51,7 +51,10 @@ public class AuthScreen extends AppCompatActivity {
         errorText = findViewById(R.id.errorText);
 
         submitButton.setOnClickListener(v -> onSubmit());
-        modeToggleText.setOnClickListener(v -> setSignUpMode(!signUpMode));
+        modeToggleText.setOnClickListener(v -> {
+            Intent intent = new Intent(AuthScreen.this, Register.class);
+            startActivity(intent);
+        });
 
         setSignUpMode(false);
     }
@@ -63,6 +66,8 @@ public class AuthScreen extends AppCompatActivity {
         modeToggleText.setText(signUp ? R.string.auth_switch_to_sign_in : R.string.auth_switch_to_sign_up);
         errorText.setText("");
     }
+
+
 
     private void onSubmit() {
         String email = emailInput.getText().toString().trim();
