@@ -1,6 +1,7 @@
 package com.mumble_jumble.touchgrass;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,7 +10,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.mumble_jumble.touchgrass.data.AuthService;
+import com.mumble_jumble.touchgrass.data.FirestoreService;
+import com.mumble_jumble.touchgrass.models.User;
+
 public class Homepage extends AppCompatActivity {
+
+    private final AuthService authService = new AuthService();
+    private final FirestoreService firestoreService = new FirestoreService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +50,12 @@ public class Homepage extends AppCompatActivity {
         TextView pointsText =
                 findViewById(R.id.pointsText);
 
+        TextView usernameText =
+                findViewById(R.id.usernameText);
+
+        View signOutButton =
+                findViewById(R.id.signOutButton);
+
 
         // =========================================================
         // PAGE ENTRANCE ANIMATIONS
@@ -64,22 +79,39 @@ public class Homepage extends AppCompatActivity {
         addPressAnimation(hikingChallenge);
         addPressAnimation(basketballChallenge);
         addPressAnimation(photoWalksChallenge);
-        addPressAnimation(findViewById(R.id.signOutButton));
+        addPressAnimation(signOutButton);
 
 
         // =========================================================
-        // POINTS TALLY ANIMATION
+        // SIGN OUT
         // =========================================================
-        //
-        // Replace this with the user's REAL points value
-        // from your database/backend when you have it.
-        //
-        // Example:
-        // int userPoints = database.getUserPoints();
-        //
-        int userPoints = 125;
 
-        animatePoints(pointsText, userPoints);
+        signOutButton.setOnClickListener(v -> {
+            authService.signOut();
+            startActivity(new Intent(this, AuthScreen.class));
+            finish();
+        });
+
+
+        // =========================================================
+        // REAL USER DATA (username + points) FROM FIRESTORE
+        // =========================================================
+
+        FirebaseUser currentUser = authService.getCurrentUser();
+        if (currentUser != null) {
+            firestoreService.getUserProfile(currentUser.getUid(), new FirestoreService.UserProfileCallback() {
+                @Override
+                public void onSuccess(User user) {
+                    usernameText.setText(user.displayName);
+                    animatePoints(pointsText, (int) user.points);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    // leave placeholder header text, non-fatal
+                }
+            });
+        }
 
 
         // =========================================================
