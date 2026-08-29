@@ -4,6 +4,11 @@ public class ChallengePack {
     public String name;
     public String activityType;
     public String description;
+    public String challengeId;
+    public ChallengePack() {
+        // Required empty constructor for Firestore
+
+    }
 
     public ChallengePack(String name, String activityType, String description) {
         this.name = name;

@@ -5,9 +5,7 @@ public class Task {
     public String type;       // "scenery_photo" or "mutual_connect"
     public int pointValue;
 
-    public Task(String name, String type, int pointValue) {
-        this.name = name;
-        this.type = type;
-        this.pointValue = pointValue;
+    public Task() {
+
     }
 }
