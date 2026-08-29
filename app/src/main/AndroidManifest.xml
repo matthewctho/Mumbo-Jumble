@@ -21,7 +21,7 @@
         </activity>
         <activity
             android:name=".AuthScreen"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Register"
@@ -32,20 +32,9 @@
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activity.SeedDataActivity"
-            android:exported="true"
-            android:label="@string/title_activity_seed_data"
-            android:theme="@style/Theme.TouchGrass.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activity.PackListActivity"
+            android:name="com.mumble_jumble.touchgrass.RedeemPoints"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activity.TaskListActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
-
     </application>
 
 </manifest>
