@@ -35,6 +35,10 @@
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".ChallengeProgress"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name="com.mumble_jumble.touchgrass.RedeemPoints"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
