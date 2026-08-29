@@ -159,7 +159,7 @@ public class RedeemPoints extends AppCompatActivity {
         }
 
 
-        // Don't allow progress to go above the reward amount
+        // Do not allow progress to go above the reward amount
         int safePoints =
                 Math.min(
                         currentPoints,

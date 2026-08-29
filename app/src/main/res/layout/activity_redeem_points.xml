@@ -150,7 +150,7 @@
                         app:layout_constraintStart_toStartOf="@id/rewardProgressWheel"
                         app:layout_constraintEnd_toEndOf="@id/rewardProgressWheel" />
 
-                    <!-- ================================================= -->
+                    <!-- ================================================== -->
                     <!-- POINTS LABEL -->
                     <!-- ================================================= -->
 
