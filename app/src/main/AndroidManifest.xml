@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TouchGrass">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".AuthScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,8 +20,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AuthScreen"
-            android:exported="false"
+            android:name=".activity.MainActivity"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Register"
