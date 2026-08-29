@@ -135,7 +135,7 @@ public class AuthScreen extends AppCompatActivity {
     }
 
     private void goToHome() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, AuthScreen.class));
         finish();
     }
 }
