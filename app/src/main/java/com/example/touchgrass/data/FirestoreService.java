@@ -15,9 +15,11 @@ public class FirestoreService {
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public void createUserProfile(String uid, String displayName, WriteCallback callback) {
+    public void createUserProfile(String uid, String displayName, String phone, String location, WriteCallback callback) {
         Map<String, Object> profile = new HashMap<>();
         profile.put("displayName", displayName);
+        profile.put("phone", phone);
+        profile.put("location", location);
         profile.put("points", 0);
         profile.put("activePacks", new ArrayList<String>());
         profile.put("pointsHidden", false);

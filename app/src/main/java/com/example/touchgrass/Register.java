@@ -23,11 +23,13 @@ public class Register extends AppCompatActivity {
     private final AuthService authService = new AuthService();
     private final FirestoreService firestoreService = new FirestoreService();
 
-    private EditText displayNameInput;
+    private EditText usernameInput;
     private EditText emailInput;
     private EditText passwordInput;
-    private Button submitButton;
-    private TextView modeToggleText;
+    private EditText phoneInput;
+    private EditText locationInput;
+    private Button registerButton;
+    private TextView loginToggleText;
     private TextView errorText;
 
     @Override
@@ -41,21 +43,25 @@ public class Register extends AppCompatActivity {
             return insets;
         });
 
-        displayNameInput = findViewById(R.id.displayNameInput);
+        usernameInput = findViewById(R.id.usernameInput);
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
-        submitButton = findViewById(R.id.submitButton);
-        modeToggleText = findViewById(R.id.modeToggleText);
+        phoneInput = findViewById(R.id.phoneInput);
+        locationInput = findViewById(R.id.locationInput);
+        registerButton = findViewById(R.id.registerButton);
+        loginToggleText = findViewById(R.id.loginToggleText);
         errorText = findViewById(R.id.errorText);
 
-        submitButton.setOnClickListener(v -> onSubmit());
-        modeToggleText.setOnClickListener(v -> finish());
+        registerButton.setOnClickListener(v -> onSubmit());
+        loginToggleText.setOnClickListener(v -> finish());
     }
 
     private void onSubmit() {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString();
-        String displayName = displayNameInput.getText().toString().trim();
+        String displayName = usernameInput.getText().toString().trim();
+        String phone = phoneInput.getText().toString().trim();
+        String location = locationInput.getText().toString().trim();
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(displayName)) {
             errorText.setText(R.string.auth_error_missing_fields);
@@ -66,7 +72,7 @@ public class Register extends AppCompatActivity {
         authService.signUp(email, password, new AuthService.AuthCallback() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                firestoreService.createUserProfile(user.getUid(), displayName, new FirestoreService.WriteCallback() {
+                firestoreService.createUserProfile(user.getUid(), displayName, phone, location, new FirestoreService.WriteCallback() {
                     @Override
                     public void onSuccess() {
                         goToHome();
@@ -89,10 +95,12 @@ public class Register extends AppCompatActivity {
     }
 
     private void setFormEnabled(boolean enabled) {
-        submitButton.setEnabled(enabled);
+        registerButton.setEnabled(enabled);
         emailInput.setEnabled(enabled);
         passwordInput.setEnabled(enabled);
-        displayNameInput.setEnabled(enabled);
+        usernameInput.setEnabled(enabled);
+        phoneInput.setEnabled(enabled);
+        locationInput.setEnabled(enabled);
     }
 
     private void goToHome() {
