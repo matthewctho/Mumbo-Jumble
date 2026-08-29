@@ -1,6 +1,7 @@
 package com.mumble_jumble.touchgrass.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -110,9 +111,16 @@ public class TaskListActivity extends AppCompatActivity {
                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
             }
 
+        } else if ("mutual_connect".equals(task.type)) {
+            Intent intent = new Intent(this, MutualConnectActivity.class);
+            intent.putExtra("packId", packId);
+            intent.putExtra("taskId", task.taskId);
+            intent.putExtra("taskPointValue", task.pointValue);
+            intent.putExtra("totalTasksInPack", tasks.size());
+            startActivity(intent);
+
         } else {
-            // Mutual connect flow (QR generate/scan) isn't wired up on this screen yet.
-            Toast.makeText(this, "Mutual connect flow coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unsupported task type", Toast.LENGTH_SHORT).show();
         }
     }
 

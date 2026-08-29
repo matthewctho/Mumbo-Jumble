@@ -49,6 +49,9 @@
             android:name=".activity.TaskListActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.MutualConnectActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.SeedDataActivity"
             android:exported="false" />
     </application>

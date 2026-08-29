@@ -31,11 +31,6 @@ public class AuthScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (authService.getCurrentUser() != null) {
-            goToHome();
-            return;
-        }
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_auth_screen);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
