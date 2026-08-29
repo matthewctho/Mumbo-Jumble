@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PackListActivity extends AppCompatActivity {
+
     private static final String TAG = "PackListActivity";
     private PackAdapter adapter;
     private List<ChallengePack> packs = new ArrayList<>();
@@ -40,13 +41,11 @@ public class PackListActivity extends AppCompatActivity {
                     packs.clear();
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         ChallengePack pack = doc.toObject(ChallengePack.class);
-                        pack.challengeId = doc.getId(); // store the doc's ID on the object
+                        pack.challengeId = doc.getId();
                         packs.add(pack);
                     }
-                    adapter.notifyDataSetChanged(); // tells RecyclerView data changed, re-render
+                    adapter.notifyDataSetChanged();
                 })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error loading packs", e);
-                });
+                .addOnFailureListener(e -> Log.e(TAG, "Error loading packs", e));
     }
 }

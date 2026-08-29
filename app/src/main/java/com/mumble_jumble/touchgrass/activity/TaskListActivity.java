@@ -29,8 +29,18 @@ public class TaskListActivity extends AppCompatActivity {
         adapter = new TaskAdapter(tasks);
         recyclerView.setAdapter(adapter);
 
-        // TEMP hardcoded — replace with the real packId passed via Intent once navigation is wired
-        String packId = "REPLACE_WITH_REAL_DOC_ID_FROM_CONSOLE";
+        String packId = getIntent().getStringExtra("packId");
+        String packName = getIntent().getStringExtra("packName");
+
+        if (packName != null) {
+            setTitle(packName); // shows pack name in the top app bar, e.g. "Trail Blazer"
+        }
+
+        if (packId == null) {
+            Log.e(TAG, "No packId received — check the Intent extras from PackListActivity.");
+            return;
+        }
+
         loadTasksFromFirestore(packId);
     }
 
@@ -48,8 +58,6 @@ public class TaskListActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();
                 })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error loading tasks", e);
-                });
+                .addOnFailureListener(e -> Log.e(TAG, "Error loading tasks", e));
     }
 }

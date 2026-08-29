@@ -1,15 +1,15 @@
 package com.mumble_jumble.touchgrass.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.mumble_jumble.touchgrass.R;
+import com.mumble_jumble.touchgrass.activity.TaskListActivity;
 import com.mumble_jumble.touchgrass.models.ChallengePack;
-
 import java.util.List;
 
 public class PackAdapter extends RecyclerView.Adapter<PackAdapter.PackViewHolder> {
@@ -33,6 +33,14 @@ public class PackAdapter extends RecyclerView.Adapter<PackAdapter.PackViewHolder
         ChallengePack pack = packList.get(position);
         holder.txtPackName.setText(pack.name);
         holder.txtPackDescription.setText(pack.description);
+
+        // Whole row is tappable — opens TaskListActivity for this specific pack
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), TaskListActivity.class);
+            intent.putExtra("packId", pack.challengeId);
+            intent.putExtra("packName", pack.name); // handy for a screen title, optional
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
