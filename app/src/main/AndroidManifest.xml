@@ -21,7 +21,7 @@
         </activity>
         <activity
             android:name=".AuthScreen"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Register"
@@ -35,6 +35,15 @@
             android:name="com.mumble_jumble.touchgrass.RedeemPoints"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.mumble_jumble.touchgrass.activity.TaskListActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.mumble_jumble.touchgrass.activity.PackListActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

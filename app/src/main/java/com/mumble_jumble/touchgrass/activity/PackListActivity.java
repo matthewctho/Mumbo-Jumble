@@ -1,5 +1,7 @@
 package com.mumble_jumble.touchgrass.activity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,9 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mumble_jumble.touchgrass.R;
 import com.mumble_jumble.touchgrass.adapters.PackAdapter;
+import com.mumble_jumble.touchgrass.data.GeminiVerificationService;
 import com.mumble_jumble.touchgrass.models.ChallengePack;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class PackListActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         loadPacksFromFirestore();
+
     }
 
     private void loadPacksFromFirestore() {
