@@ -1,4 +1,4 @@
-package com.example.touchgrass.data;
+package com.mumble_jumble.touchgrass.data;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 

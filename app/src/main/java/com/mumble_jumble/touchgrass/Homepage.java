@@ -1,4 +1,4 @@
-package com.example.touchgrass;
+package com.mumble_jumble.touchgrass;
 
 import android.os.Bundle;
 

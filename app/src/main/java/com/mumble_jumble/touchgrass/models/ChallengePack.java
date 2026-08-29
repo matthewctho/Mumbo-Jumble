@@ -1,4 +1,4 @@
-package com.example.touchgrass.models;
+package com.mumble_jumble.touchgrass.models;
 // This is the challenges description and activities
 public class ChallengePack {
     public String name;

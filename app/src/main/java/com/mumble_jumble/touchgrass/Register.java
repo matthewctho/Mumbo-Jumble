@@ -1,4 +1,4 @@
-package com.example.touchgrass;
+package com.mumble_jumble.touchgrass;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +13,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.touchgrass.activity.MainActivity;
-import com.example.touchgrass.data.AuthService;
-import com.example.touchgrass.data.FirestoreService;
+import com.mumble_jumble.touchgrass.activity.MainActivity;
+import com.mumble_jumble.touchgrass.data.AuthService;
+import com.mumble_jumble.touchgrass.data.FirestoreService;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Register extends AppCompatActivity {
