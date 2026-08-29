@@ -9,4 +9,5 @@
     <string name="auth_switch_to_sign_in">Already have an account? Sign In</string>
     <string name="auth_error_missing_fields">Please fill in all fields.</string>
     <string name="auth_error_profile_failed">Signed in, but profile setup failed: %1$s</string>
+    <string name="title_activity_seed_data">Seed Data</string>
 </resources>
