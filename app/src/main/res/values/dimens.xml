@@ -15,4 +15,7 @@
     <dimen name="dp_407">407dp</dimen>
     <dimen name="dp_1080">1080dp</dimen>
     <dimen name="dp_2424">2424dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>
