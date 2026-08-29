@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TouchGrass">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".AuthScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,12 +20,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AuthScreen"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".Register"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Homepage"
@@ -33,17 +29,11 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.mumble_jumble.touchgrass.RedeemPoints"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.mumble_jumble.touchgrass.activity.TaskListActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="com.mumble_jumble.touchgrass.activity.PackListActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
-
+            android:name=".activity.PackListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

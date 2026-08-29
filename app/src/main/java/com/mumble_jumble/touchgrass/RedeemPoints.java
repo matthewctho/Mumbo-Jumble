@@ -5,21 +5,23 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.view.animation.DecelerateInterpolator;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.mumble_jumble.touchgrass.data.AuthService;
+import com.mumble_jumble.touchgrass.data.FirestoreService;
+import com.mumble_jumble.touchgrass.models.User;
 
 public class RedeemPoints extends AppCompatActivity {
 
-    // ==============================
-    // USER POINTS
-    // ==============================
-
-    // Change this later when you connect
-    // your points to a database/backend.
-    private int currentPoints = 1400;
+    private final AuthService authService = new AuthService();
+    private final FirestoreService firestoreService = new FirestoreService();
 
     // Points required for the next reward.
     private int nextRewardPoints = 1500;
@@ -29,8 +31,16 @@ public class RedeemPoints extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        EdgeToEdge.enable(this);
+
         // Connect this Activity to your XML layout
         setContentView(R.layout.activity_redeem_points);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.pointsPage), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
 
         // ==============================
@@ -64,6 +74,46 @@ public class RedeemPoints extends AppCompatActivity {
             finish();
         });
 
+
+        // ==============================
+        // FETCH REAL POINTS FROM FIRESTORE
+        // ==============================
+
+        String currentUserId = authService.getCurrentUser() != null
+                ? authService.getCurrentUser().getUid()
+                : null;
+
+        if (currentUserId == null) {
+            displayPoints(0, totalPointsText, nextRewardLabel, progressPercentage, rewardProgressWheel, pointsProgress);
+            return;
+        }
+
+        firestoreService.getUserProfile(currentUserId, new FirestoreService.UserProfileCallback() {
+            @Override
+            public void onSuccess(User user) {
+                displayPoints((int) user.points, totalPointsText, nextRewardLabel, progressPercentage, rewardProgressWheel, pointsProgress);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                displayPoints(0, totalPointsText, nextRewardLabel, progressPercentage, rewardProgressWheel, pointsProgress);
+            }
+        });
+    }
+
+
+    // =========================================================
+    // DISPLAY POINTS
+    // =========================================================
+
+    private void displayPoints(
+            int currentPoints,
+            TextView totalPointsText,
+            TextView nextRewardLabel,
+            TextView progressPercentage,
+            CircularProgressIndicator rewardProgressWheel,
+            LinearProgressIndicator pointsProgress
+    ) {
 
         // ==============================
         // DISPLAY TOTAL POINTS

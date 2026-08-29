@@ -13,7 +13,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.mumble_jumble.touchgrass.activity.MainActivity;
 import com.mumble_jumble.touchgrass.data.AuthService;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,11 +24,18 @@ public class AuthScreen extends AppCompatActivity {
     private EditText passwordInput;
     private Button submitButton;
     private TextView modeToggleText;
+    private TextView forgotPasswordText;
     private TextView errorText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (authService.getCurrentUser() != null) {
+            goToHome();
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_auth_screen);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -42,10 +48,33 @@ public class AuthScreen extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordInput);
         submitButton = findViewById(R.id.submitButton);
         modeToggleText = findViewById(R.id.modeToggleText);
+        forgotPasswordText = findViewById(R.id.tvForgotPassword);
         errorText = findViewById(R.id.errorText);
 
         submitButton.setOnClickListener(v -> onSubmit());
         modeToggleText.setOnClickListener(v -> startActivity(new Intent(this, Register.class)));
+        forgotPasswordText.setOnClickListener(v -> onForgotPassword());
+    }
+
+    private void onForgotPassword() {
+        String email = emailInput.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email)) {
+            errorText.setText(R.string.auth_error_missing_email);
+            return;
+        }
+
+        authService.sendPasswordResetEmail(email, new AuthService.ResetPasswordCallback() {
+            @Override
+            public void onSuccess() {
+                errorText.setText(R.string.auth_reset_email_sent);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                errorText.setText(e.getMessage());
+            }
+        });
     }
 
     private void onSubmit() {
@@ -79,7 +108,7 @@ public class AuthScreen extends AppCompatActivity {
     }
 
     private void goToHome() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, Homepage.class));
         finish();
     }
 }
