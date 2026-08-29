@@ -1,6 +1,7 @@
 package com.mumble_jumble.touchgrass.data;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.mumble_jumble.touchgrass.models.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +14,19 @@ public class FirestoreService {
         void onFailure(Exception e);
     }
 
+    public interface UserProfileCallback {
+        void onSuccess(User user);
+        void onFailure(Exception e);
+    }
+
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    public void getUserProfile(String uid, UserProfileCallback callback) {
+        db.collection("users").document(uid)
+                .get()
+                .addOnSuccessListener(doc -> callback.onSuccess(doc.toObject(User.class)))
+                .addOnFailureListener(callback::onFailure);
+    }
 
     public void createUserProfile(String uid, String displayName, String phone, String location, WriteCallback callback) {
         Map<String, Object> profile = new HashMap<>();
