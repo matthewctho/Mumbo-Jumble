@@ -1,5 +1,9 @@
 package com.mumble_jumble.touchgrass.data;
 
+import android.util.Log;
+
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -41,6 +45,12 @@ public class FirestoreService {
 
     public interface ConnectionCallback {
         void onSuccess(Connection connection);
+        void onFailure(Exception e);
+    }
+
+    public interface RedeemCallback {
+        void onSuccess(long newBalance);
+        void onInsufficientPoints(long currentBalance);
         void onFailure(Exception e);
     }
 
@@ -108,6 +118,14 @@ public class FirestoreService {
     public void completeTask(String uid, String packId, String taskId, int taskPointValue,
                              int totalTasksInPack, WriteCallback callback) {
         String docId = progressDocId(uid, packId);
+
+        // Points live in two places on purpose: challengeProgress.pointsEarned is
+        // the per-pack tally (for that pack's own progress bar), users.points is
+        // the single running total everything else (Homepage, RedeemPoints) reads.
+        db.collection("users").document(uid)
+                .update("points", FieldValue.increment(taskPointValue))
+                .addOnFailureListener(e -> Log.e("FirestoreService", "Failed to add points to user total", e));
+
         db.collection("challengeProgress").document(docId)
                 .update(
                         "tasksCompleted", FieldValue.arrayUnion(taskId),
@@ -248,5 +266,48 @@ public class FirestoreService {
                 .update(field, true)
                 .addOnSuccessListener(unused -> callback.onSuccess())
                 .addOnFailureListener(callback::onFailure);
+    }
+
+    // --- Redeem points ---
+
+    /** Thrown inside the redeemReward transaction when the user can't afford the cost. */
+    private static class InsufficientPointsException extends RuntimeException {
+        final long currentBalance;
+        InsufficientPointsException(long currentBalance) {
+            this.currentBalance = currentBalance;
+        }
+    }
+
+    /**
+     * Atomically spends `cost` points from the user's balance, refusing if they
+     * can't afford it. Runs as a transaction (read-check-write) rather than a
+     * plain FieldValue.increment(-cost), so a balance can never go negative —
+     * e.g. two rapid taps on "Redeem" can't both succeed off a stale read.
+     */
+    public void redeemReward(String uid, int cost, RedeemCallback callback) {
+        DocumentReference userRef = db.collection("users").document(uid);
+
+        db.runTransaction(transaction -> {
+            DocumentSnapshot snapshot = transaction.get(userRef);
+            Long currentPoints = snapshot.getLong("points");
+            long balance = currentPoints != null ? currentPoints : 0;
+
+            if (balance < cost) {
+                throw new InsufficientPointsException(balance);
+            }
+
+            long newBalance = balance - cost;
+            transaction.update(userRef, "points", newBalance);
+            return newBalance;
+        }).addOnSuccessListener(newBalance -> callback.onSuccess((Long) newBalance))
+          .addOnFailureListener(e -> {
+              Throwable cause = e.getCause() instanceof InsufficientPointsException ? e.getCause() : e;
+              if (cause instanceof InsufficientPointsException) {
+                  callback.onInsufficientPoints(((InsufficientPointsException) cause).currentBalance);
+              } else {
+                  Log.e("FirestoreService", "Failed to redeem reward", e);
+                  callback.onFailure(e);
+              }
+          });
     }
 }

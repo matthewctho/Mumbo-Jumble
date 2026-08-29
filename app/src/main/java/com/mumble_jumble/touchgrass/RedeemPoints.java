@@ -3,6 +3,7 @@ package com.mumble_jumble.touchgrass;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.activity.EdgeToEdge;
@@ -12,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.mumble_jumble.touchgrass.data.AuthService;
@@ -76,6 +78,24 @@ public class RedeemPoints extends AppCompatActivity {
 
 
         // ==============================
+        // REDEEM BUTTONS
+        // ==============================
+
+        MaterialButton redeem5Button = findViewById(R.id.redeem5Button);
+        MaterialButton redeem10Button = findViewById(R.id.redeem10Button);
+        MaterialButton redeem25Button = findViewById(R.id.redeem25Button);
+
+        redeem5Button.setOnClickListener(v -> attemptRedeem(750, "$5 gift card",
+                totalPointsText, nextRewardLabel, progressPercentage, rewardProgressWheel, pointsProgress));
+
+        redeem10Button.setOnClickListener(v -> attemptRedeem(1500, "$10 gift card",
+                totalPointsText, nextRewardLabel, progressPercentage, rewardProgressWheel, pointsProgress));
+
+        redeem25Button.setOnClickListener(v -> attemptRedeem(3500, "$25 gift card",
+                totalPointsText, nextRewardLabel, progressPercentage, rewardProgressWheel, pointsProgress));
+
+
+        // ==============================
         // FETCH REAL POINTS FROM FIRESTORE
         // ==============================
 
@@ -97,6 +117,48 @@ public class RedeemPoints extends AppCompatActivity {
             @Override
             public void onFailure(Exception e) {
                 displayPoints(0, totalPointsText, nextRewardLabel, progressPercentage, rewardProgressWheel, pointsProgress);
+            }
+        });
+    }
+
+
+    // =========================================================
+    // REDEEM A REWARD
+    // =========================================================
+
+    private void attemptRedeem(
+            int cost,
+            String rewardLabel,
+            TextView totalPointsText,
+            TextView nextRewardLabel,
+            TextView progressPercentage,
+            CircularProgressIndicator rewardProgressWheel,
+            LinearProgressIndicator pointsProgress
+    ) {
+        String uid = authService.getCurrentUser() != null ? authService.getCurrentUser().getUid() : null;
+        if (uid == null) {
+            Toast.makeText(this, "You need to be signed in to redeem a reward", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        firestoreService.redeemReward(uid, cost, new FirestoreService.RedeemCallback() {
+            @Override
+            public void onSuccess(long newBalance) {
+                Toast.makeText(RedeemPoints.this, "Redeemed " + rewardLabel + "!", Toast.LENGTH_LONG).show();
+                displayPoints((int) newBalance, totalPointsText, nextRewardLabel, progressPercentage,
+                        rewardProgressWheel, pointsProgress);
+            }
+
+            @Override
+            public void onInsufficientPoints(long currentBalance) {
+                long stillNeeded = cost - currentBalance;
+                Toast.makeText(RedeemPoints.this,
+                        "Not enough points yet — " + stillNeeded + " more to go", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(RedeemPoints.this, "Couldn't redeem — try again", Toast.LENGTH_SHORT).show();
             }
         });
     }
