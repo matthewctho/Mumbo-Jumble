@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.mumble_jumble.touchgrass.activity.MutualConnectActivity;
+import com.mumble_jumble.touchgrass.activity.TaskListActivity;
 import com.mumble_jumble.touchgrass.data.AuthService;
 import com.mumble_jumble.touchgrass.data.FirestoreService;
 import com.mumble_jumble.touchgrass.data.GeminiVerificationService;
@@ -315,39 +316,36 @@ public class ChallengeProgress extends AppCompatActivity {
         }
 
         isSubmitting = true;
-        Toast.makeText(this, "Uploading photo…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Verifying photo…", Toast.LENGTH_SHORT).show();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         photo.compress(Bitmap.CompressFormat.JPEG, 80, stream);
         byte[] imageBytes = stream.toByteArray();
 
-        storageService.uploadSubmissionPhoto(uid, task.taskId, imageBytes, new StorageService.UploadCallback() {
-            @Override
-            public void onSuccess(String downloadUrl) {
-                Submission submission = new Submission(uid, task.taskId, packId, downloadUrl);
-                firestoreService.createSubmission(submission, new FirestoreService.SubmissionCreatedCallback() {
+        verificationService.verifyPhoto(imageBytes, task.name, task.description, task.type,
+                new GeminiVerificationService.VerificationCallback() {
                     @Override
-                    public void onSuccess(String submissionDocId) {
-                        verifyAndFinish(uid, task, submissionDocId, imageBytes);
+                    public void onResult(boolean approved, String reason) {
+                        if (approved) {
+                            awardPoints(uid, task);
+                        } else {
+                            isSubmitting = false;
+                            Toast.makeText(ChallengeProgress.this,
+                                    "Not verified: " + reason, Toast.LENGTH_LONG).show();
+                        }
                     }
 
                     @Override
-                    public void onFailure(Exception e) {
-                        Log.e(TAG, "Failed to create submission doc", e);
+                    public void onError(Exception e) {
+                        // AI verification unavailable — fail honestly rather than
+                        // silently rejecting or awarding points for an unverified photo.
+                        Log.e(TAG, "Gemini verification failed", e);
                         isSubmitting = false;
-                        Toast.makeText(ChallengeProgress.this, "Couldn't save submission — try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChallengeProgress.this, "Verification unavailable right now — try again in a moment", Toast.LENGTH_LONG).show();
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.e(TAG, "Photo upload failed", e);
-                isSubmitting = false;
-                Toast.makeText(ChallengeProgress.this, "Upload failed — check your connection", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
+
 
     private void verifyAndFinish(String uid, Task task, String submissionDocId, byte[] imageBytes) {
         Toast.makeText(this, "Verifying photo…", Toast.LENGTH_SHORT).show();
