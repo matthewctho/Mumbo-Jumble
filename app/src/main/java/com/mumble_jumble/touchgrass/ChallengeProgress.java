@@ -24,12 +24,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.mumble_jumble.touchgrass.activity.MutualConnectActivity;
-import com.mumble_jumble.touchgrass.activity.TaskListActivity;
 import com.mumble_jumble.touchgrass.data.AuthService;
 import com.mumble_jumble.touchgrass.data.FirestoreService;
 import com.mumble_jumble.touchgrass.data.GeminiVerificationService;
-import com.mumble_jumble.touchgrass.data.StorageService;
-import com.mumble_jumble.touchgrass.models.Submission;
 import com.mumble_jumble.touchgrass.models.Task;
 import com.mumble_jumble.touchgrass.models.User;
 
@@ -49,7 +46,6 @@ public class ChallengeProgress extends AppCompatActivity {
     private static final String TAG = "ChallengeProgress";
 
     private final AuthService authService = new AuthService();
-    private final StorageService storageService = new StorageService();
     private final FirestoreService firestoreService = new FirestoreService();
     private final GeminiVerificationService verificationService = new GeminiVerificationService();
 
@@ -341,60 +337,9 @@ public class ChallengeProgress extends AppCompatActivity {
                         // silently rejecting or awarding points for an unverified photo.
                         Log.e(TAG, "Gemini verification failed", e);
                         isSubmitting = false;
-                        Toast.makeText(ChallengeProgress.this, "Verification unavailable right now — try again in a moment", Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
-
-
-    private void verifyAndFinish(String uid, Task task, String submissionDocId, byte[] imageBytes) {
-        Toast.makeText(this, "Verifying photo…", Toast.LENGTH_SHORT).show();
-
-        verificationService.verifyPhoto(imageBytes, task.name, task.description, task.type,
-                new GeminiVerificationService.VerificationCallback() {
-                    @Override
-                    public void onResult(boolean approved, String reason) {
-                        String status = approved ? "verified" : "rejected";
-                        firestoreService.updateSubmissionStatus(submissionDocId, status, approved,
-                                new FirestoreService.WriteCallback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        if (approved) {
-                                            awardPoints(uid, task);
-                                        } else {
-                                            isSubmitting = false;
-                                            Toast.makeText(ChallengeProgress.this,
-                                                    "Not verified: " + reason, Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        Log.e(TAG, "Failed to update submission status", e);
-                                        isSubmitting = false;
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e(TAG, "Gemini verification failed", e);
-                        firestoreService.updateSubmissionStatus(submissionDocId, "pending", null,
-                                new FirestoreService.WriteCallback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        isSubmitting = false;
-                                        Toast.makeText(ChallengeProgress.this,
-                                                "Uploaded! Verification is unavailable right now — pending manual review",
-                                                Toast.LENGTH_LONG).show();
-                                    }
-
-                                    @Override
-                                    public void onFailure(Exception e2) {
-                                        Log.e(TAG, "Failed to mark submission pending", e2);
-                                        isSubmitting = false;
-                                    }
-                                });
+                        Toast.makeText(ChallengeProgress.this,
+                                "Verification unavailable right now — try again in a moment",
+                                Toast.LENGTH_LONG).show();
                     }
                 });
     }

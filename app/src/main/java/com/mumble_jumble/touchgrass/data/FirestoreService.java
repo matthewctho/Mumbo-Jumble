@@ -7,11 +7,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.mumble_jumble.touchgrass.models.ChallengeProgress;
 import com.mumble_jumble.touchgrass.models.Connection;
 import com.mumble_jumble.touchgrass.models.Submission;
 import com.mumble_jumble.touchgrass.models.User;
-
+import com.mumble_jumble.touchgrass.models.ChallengeProgress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

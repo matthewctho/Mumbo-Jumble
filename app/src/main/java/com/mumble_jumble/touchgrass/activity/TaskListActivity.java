@@ -1,5 +1,4 @@
 package com.mumble_jumble.touchgrass.activity;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -7,7 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
+import com.mumble_jumble.touchgrass.models.ChallengeProgress;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +19,6 @@ import com.mumble_jumble.touchgrass.adapters.TaskAdapter;
 import com.mumble_jumble.touchgrass.data.AuthService;
 import com.mumble_jumble.touchgrass.data.FirestoreService;
 import com.mumble_jumble.touchgrass.data.GeminiVerificationService;
-import com.mumble_jumble.touchgrass.data.StorageService;
-import com.mumble_jumble.touchgrass.models.Submission;
 import com.mumble_jumble.touchgrass.models.Task;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class TaskListActivity extends AppCompatActivity {
 
@@ -46,7 +44,6 @@ public class TaskListActivity extends AppCompatActivity {
     private boolean isSubmitting = false;
 
     private final AuthService authService = new AuthService();
-    private final StorageService storageService = new StorageService();
     private final FirestoreService firestoreService = new FirestoreService();
     private final GeminiVerificationService verificationService = new GeminiVerificationService();
 
@@ -132,38 +129,31 @@ public class TaskListActivity extends AppCompatActivity {
         }
 
         isSubmitting = true;
-        Toast.makeText(this, "Uploading photo…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Verifying photo…", Toast.LENGTH_SHORT).show();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         photo.compress(Bitmap.CompressFormat.JPEG, 80, stream);
         byte[] imageBytes = stream.toByteArray();
 
-        storageService.uploadSubmissionPhoto(uid, task.taskId, imageBytes, new StorageService.UploadCallback() {
-            @Override
-            public void onSuccess(String downloadUrl) {
-                Submission submission = new Submission(uid, task.taskId, packId, downloadUrl);
-                firestoreService.createSubmission(submission, new FirestoreService.SubmissionCreatedCallback() {
+        verificationService.verifyPhoto(imageBytes, task.name, task.description, task.type,
+                new GeminiVerificationService.VerificationCallback() {
                     @Override
-                    public void onSuccess(String submissionDocId) {
-                        verifyAndFinish(uid, task, submissionDocId, imageBytes);
+                    public void onResult(boolean approved, String reason) {
+                        if (approved) {
+                            awardPoints(uid, task);
+                        } else {
+                            isSubmitting = false;
+                            Toast.makeText(TaskListActivity.this, "Not verified: " + reason, Toast.LENGTH_LONG).show();
+                        }
                     }
 
                     @Override
-                    public void onFailure(Exception e) {
-                        Log.e(TAG, "Failed to create submission doc", e);
+                    public void onError(Exception e) {
+                        Log.e(TAG, "Gemini verification failed", e);
                         isSubmitting = false;
-                        Toast.makeText(TaskListActivity.this, "Couldn't save submission — try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TaskListActivity.this, "Verification unavailable right now — try again in a moment", Toast.LENGTH_LONG).show();
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.e(TAG, "Photo upload failed", e);
-                isSubmitting = false;
-                Toast.makeText(TaskListActivity.this, "Upload failed — check your connection", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void verifyAndFinish(String uid, Task task, String submissionDocId, byte[] imageBytes) {
