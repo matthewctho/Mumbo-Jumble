@@ -21,7 +21,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.mumble_jumble.touchgrass.activity.TaskListActivity;
 import com.mumble_jumble.touchgrass.data.AuthService;
 import com.mumble_jumble.touchgrass.data.FirestoreService;
 import com.mumble_jumble.touchgrass.models.ChallengePack;
@@ -1287,9 +1286,10 @@ public class Homepage extends AppCompatActivity {
 
             if (packId != null) {
 
-                Intent intent = new Intent(Homepage.this, TaskListActivity.class);
+                Intent intent = new Intent(Homepage.this, ChallengeProgress.class);
                 intent.putExtra("packId", packId);
                 intent.putExtra("packName", title);
+                intent.putExtra("packDescription", description);
                 startActivity(intent);
 
             } else {
