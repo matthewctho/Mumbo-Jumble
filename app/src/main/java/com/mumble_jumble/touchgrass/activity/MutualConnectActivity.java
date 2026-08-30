@@ -88,6 +88,8 @@ public class MutualConnectActivity extends AppCompatActivity {
         qrImage = findViewById(R.id.qrImage);
         statusText = findViewById(R.id.connectStatusText);
 
+        findViewById(R.id.backButton).setOnClickListener(v -> finish());
+
         showQrButton.setOnClickListener(v -> generateCode());
         scanQrButton.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -99,6 +101,11 @@ public class MutualConnectActivity extends AppCompatActivity {
         });
     }
 
+    private void setStatus(String text) {
+        statusText.setText(text);
+        statusText.setVisibility(View.VISIBLE);
+    }
+
     private void generateCode() {
         String uid = authService.getCurrentUser() != null ? authService.getCurrentUser().getUid() : null;
         if (uid == null) {
@@ -108,7 +115,7 @@ public class MutualConnectActivity extends AppCompatActivity {
 
         showQrButton.setEnabled(false);
         scanQrButton.setEnabled(false);
-        statusText.setText("Creating your code…");
+        setStatus("Creating your code…");
 
         Connection connection = new Connection(uid, packId, taskId);
         firestoreService.createConnection(connection, new FirestoreService.ConnectionCreatedCallback() {
@@ -116,7 +123,7 @@ public class MutualConnectActivity extends AppCompatActivity {
             public void onSuccess(String connectionDocId) {
                 Log.d(TAG, "Created connection: " + connectionDocId);
                 showQrBitmap(connectionDocId);
-                statusText.setText("Show this to the other hiker — waiting for them to scan…");
+                setStatus("Show this to the other hiker — waiting for them to scan…");
                 listenForConfirmation(connectionDocId, uid);
             }
 
@@ -125,7 +132,7 @@ public class MutualConnectActivity extends AppCompatActivity {
                 Log.e(TAG, "Failed to create connection", e);
                 showQrButton.setEnabled(true);
                 scanQrButton.setEnabled(true);
-                statusText.setText("Couldn't create a code — try again");
+                setStatus("Couldn't create a code — try again");
             }
         });
     }
@@ -153,7 +160,7 @@ public class MutualConnectActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Connection connection) {
                 if (connection.bothConfirmed && !connection.pointsAwardedA) {
-                    statusText.setText("Connected! Awarding your points…");
+                    setStatus("Connected! Awarding your points…");
                     awardPoints(myUid, connectionId, true);
                 }
             }
@@ -181,17 +188,17 @@ public class MutualConnectActivity extends AppCompatActivity {
             return;
         }
 
-        statusText.setText("Checking code…");
+        setStatus("Checking code…");
 
         firestoreService.getConnection(connectionId, new FirestoreService.ConnectionCallback() {
             @Override
             public void onSuccess(Connection connection) {
                 if (uid.equals(connection.userA)) {
-                    statusText.setText("That's your own code — get someone else to scan it!");
+                    setStatus("That's your own code — get someone else to scan it!");
                     return;
                 }
                 if (connection.userB != null) {
-                    statusText.setText("This code has already been used.");
+                    setStatus("This code has already been used.");
                     return;
                 }
 
@@ -199,14 +206,14 @@ public class MutualConnectActivity extends AppCompatActivity {
                         new FirestoreService.WriteCallback() {
                             @Override
                             public void onSuccess() {
-                                statusText.setText("Connected! Awarding your points…");
+                                setStatus("Connected! Awarding your points…");
                                 awardPoints(uid, connectionId, false);
                             }
 
                             @Override
                             public void onFailure(Exception e) {
                                 Log.e(TAG, "Failed to confirm connection", e);
-                                statusText.setText("Couldn't confirm — try scanning again");
+                                setStatus("Couldn't confirm — try scanning again");
                             }
                         });
             }
@@ -214,7 +221,7 @@ public class MutualConnectActivity extends AppCompatActivity {
             @Override
             public void onFailure(Exception e) {
                 Log.e(TAG, "Failed to read scanned connection", e);
-                statusText.setText(e.getMessage());
+                setStatus(e.getMessage());
             }
         });
     }
@@ -228,13 +235,13 @@ public class MutualConnectActivity extends AppCompatActivity {
                                 new FirestoreService.WriteCallback() {
                                     @Override
                                     public void onSuccess() {
-                                        statusText.setText("+" + taskPointValue + " points! You're all set.");
+                                        setStatus("+" + taskPointValue + " points! You're all set.");
                                     }
 
                                     @Override
                                     public void onFailure(Exception e) {
                                         Log.e(TAG, "Failed to mark points awarded", e);
-                                        statusText.setText("+" + taskPointValue + " points! You're all set.");
+                                        setStatus("+" + taskPointValue + " points! You're all set.");
                                     }
                                 });
                     }
@@ -242,7 +249,7 @@ public class MutualConnectActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Exception e) {
                         Log.e(TAG, "Failed to award points", e);
-                        statusText.setText("Connected, but couldn't save points — try again");
+                        setStatus("Connected, but couldn't save points — try again");
                     }
                 });
     }
